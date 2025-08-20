@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<EmBitz_debug_session>
+	<debuggerLastSession>
+		<watches>
+			<watch key="*ca" format="0" array="0" start="0" count="0" expanded="0" live="0" />
+			<watch key="SpiSioBuff" format="3" array="1" start="0" count="16" expanded="0" live="0" />
+			<watch key="adc_busy" format="0" array="0" start="0" count="0" expanded="0" live="0" />
+			<watch key="dbg_cmd" format="0" array="0" start="0" count="0" expanded="1" live="0" />
+			<watch key="dbg_cmd_result" format="0" array="0" start="0" count="0" expanded="0" live="0" />
+			<watch key="g_SioCheckErr" format="0" array="0" start="0" count="0" expanded="0" live="0" />
+			<watch key="g_TickCnt" format="0" array="0" start="0" count="0" expanded="0" live="0" />
+			<watch key="g_UartBuff.rx" format="0" array="0" start="0" count="0" expanded="1" live="0" />
+			<watch key="tmps" format="0" array="1" start="0" count="16" expanded="0" live="0" />
+			<watch key="g_AdcLastVal" format="0" array="0" start="0" count="0" expanded="0" live="0" />
+			<watch key="g_AdcDmaBuff" format="0" array="0" start="0" count="0" expanded="0" live="0" />
+			<watch key="g_AdcLPFVal" format="0" array="0" start="0" count="0" expanded="0" live="0" />
+			<watch key="SI_buff" format="3" array="1" start="0" count="4" expanded="1" live="1" />
+		</watches>
+		<memory_view address="0x200005EC" locked="0" live="0" options="1058" />
+	</debuggerLastSession>
+</EmBitz_debug_session>

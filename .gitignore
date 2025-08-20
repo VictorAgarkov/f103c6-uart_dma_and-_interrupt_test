@@ -1,0 +1,14 @@
+*.o
+*.d
+*.map
+*.elf
+*.cmd
+*.bat
+*.zip
+*.*-
+*.depend
+*.cscope_file_list
+.lock.
+cscope.out
+*cppcheck-build-dir/
+__/
