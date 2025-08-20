@@ -103,10 +103,16 @@
 		<Unit filename="cmsis\mpu_armv7.h" />
 		<Unit filename="cmsis\mpu_armv8.h" />
 		<Unit filename="cmsis\tz_context.h" />
+		<Unit filename="inc\goods.h" />
+		<Unit filename="inc\gpio_F1xx.h" />
 		<Unit filename="inc\main.h" />
+		<Unit filename="inc\pins.h" />
 		<Unit filename="inc\stm32f10x.h" />
 		<Unit filename="inc\system_stm32f10x.h" />
 		<Unit filename="src\main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src\pins.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src\startup_stm32f103x6.S">
