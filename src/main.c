@@ -4,7 +4,7 @@
 	Проверяем, проходят ли прерывания от UART, если принятые данные забираются по DMA.
 
 	Для этого настраиваем:
-		1. UART1 на 1 мбит/с, выход TX перемычкой заворачиваем на вход RX. Разрешаем прерывания RX.
+		1. UART1 на 1 мбит/с, выход TX перемычкой заворачиваем на вход RX (PA9<->PA10). Разрешаем прерывания RX.
 		2. DMA, что бы забирал принятое UART.
 		3. TIM3, что бы прерывал периодически.
 	В обработчиках прерываний от:
@@ -41,7 +41,7 @@
 
 
 uint8_t           uart_rx_dma_buff[256];      // сюда по DMA попадают принятые UART данные
-volatile uint32_t last_dmarx_CNDTR;           // последнее считанное значение DMA->CNDTR
+uint32_t          last_dmarx_CNDTR;           // последнее считанное значение DMA->CNDTR
 volatile uint32_t UART_IRQ_cnt = 0;           // счётчик прерываний UART1
 volatile uint32_t TIM_IRQ_cnt = 0;            // счётчик прерываний TIM3
 int               rx_routine_stat[8] = {0};   // статистика - сколько байт готово в uart_rx_dma_buff при очередном вызове Uart_RxRoutine
@@ -124,6 +124,18 @@ void MAIN_UART_IRQHandler(void)
 	GPIO_OUT_VAL(PIN_STM_DIAG2, 0);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Функция, где мы что-то делаем с принятыми по UART данными.
+// (Сейчас только считаем общий объём)
+// Параметры:
+// src - массив с данными
+// len - кол-во байт в src
+//
+//
+void rx_buff(char *src, int len)
+{
+	rx_count += len;  // сколько всего принято
+}
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Смотрим указатель DMA CNDTR, при необходимости
 // отдаём принятое.
 // время от времени вызывается из main.
@@ -136,21 +148,19 @@ void Uart_RxRoutine(void)
 		GPIO_OUT_VAL(PIN_STM_DIAG3, 1);
 		uint32_t bsize  = NUMOFARRAY(uart_rx_dma_buff);
 		uint32_t remain = (last_dmarx_CNDTR - cndtr) % bsize; // сколько успели принять
-//		uint32_t tail   = bsize - last_dmarx_CNDTR;  // указатель на хвост (откуда читать)
+		uint32_t tail   = bsize - last_dmarx_CNDTR;  // указатель на хвост (откуда читать)
 
-//		while(remain)
-//		{
-//			uint32_t to_copy = min(remain, bsize - tail);
-//			rx_cmd_buff(&g_UartBuff, (char*)uart_rx_dma_buff + tail, to_copy);
-//
-//
-//			tail += to_copy;
-//			if(tail >= bsize) tail -= bsize;
-//			remain -= to_copy;
-//		}
+		rx_routine_stat[min(NUMOFARRAY(rx_routine_stat) - 1, remain)]++;  // собираем статистику - сколько байт успели накопить с момента предыдущего вызова
 
-		rx_routine_stat[min(NUMOFARRAY(rx_routine_stat) - 1, remain)]++;  // собираем статистику
-		rx_count += remain;  // сколько всего принято
+		while(remain)
+		{
+			uint32_t to_copy = min(remain, bsize - tail);     // размер непрерывного куска данных
+			rx_buff((char*)uart_rx_dma_buff + tail, to_copy); // вдумчиво обрабатываем принятые данные
+
+			tail += to_copy;
+			if(tail >= bsize) tail -= bsize;
+			remain -= to_copy;
+		}
 
 		last_dmarx_CNDTR = cndtr;
 
